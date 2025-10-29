@@ -1,5 +1,6 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 function currency(amount) {
   try {
@@ -18,12 +19,14 @@ function Checkout() {
     return null
   }
 
-  const { title, date, time, qty, subtotal, taxes, total } = state
+  const { title, date, time, qty, subtotal, taxes, total, experienceId } = state
 
   const [fullName, setFullName] = React.useState('John Doe')
   const [email, setEmail] = React.useState('test@test.com')
   const [agree, setAgree] = React.useState(true)
   const [promo, setPromo] = React.useState('')
+  const [discount, setDiscount] = React.useState(0)
+  const [applying, setApplying] = React.useState(false)
 
   const isEmailValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
   const isValid = fullName.trim().length > 0 && isEmailValid(email) && agree
@@ -60,7 +63,22 @@ function Checkout() {
                   <label className="block text-xs text-gray-600 mb-1">Promo code</label>
                   <div className="flex gap-3">
                     <input value={promo} onChange={(e) => setPromo(e.target.value)} className="flex-1 rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm" />
-                    <button className="rounded-md bg-gray-800 text-white px-4 py-2 text-sm">Apply</button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setApplying(true)
+                        try {
+                          const res = await axios.post('http://localhost:8000/api/promo/validate', { subtotal, code: promo })
+                          setDiscount(res.data?.data?.discount || 0)
+                        } finally {
+                          setApplying(false)
+                        }
+                      }}
+                      className="rounded-md bg-gray-800 text-white px-4 py-2 text-sm disabled:opacity-70"
+                      disabled={applying}
+                    >
+                      {applying ? 'Applying…' : 'Apply'}
+                    </button>
                   </div>
                 </div>
                 <label className="flex items-center gap-2 text-xs text-gray-700 md:col-span-2">
@@ -93,13 +111,19 @@ function Checkout() {
                 <span className="text-gray-600">Subtotal</span>
                 <span className="text-gray-900">{currency(subtotal)}</span>
               </div>
+              {discount > 0 && (
+                <div className="p-4 border-b border-gray-200 flex items-center justify-between text-sm text-green-700">
+                  <span>Promo discount</span>
+                  <span>-{currency(discount)}</span>
+                </div>
+              )}
               <div className="p-4 border-b border-gray-200 flex items-center justify-between text-sm">
                 <span className="text-gray-600">Taxes</span>
                 <span className="text-gray-900">{currency(taxes)}</span>
               </div>
               <div className="p-4 flex items-center justify-between text-base font-semibold">
                 <span className="text-gray-900">Total</span>
-                <span className="text-gray-900">{currency(total)}</span>
+                <span className="text-gray-900">{currency(Math.max(total - discount, 0))}</span>
               </div>
               <div className="p-4">
                 <button
@@ -109,7 +133,24 @@ function Checkout() {
                     // Generate a short, user-friendly reference id
                     const ref = Math.random().toString(36).slice(2, 6).toUpperCase() +
                       Math.random().toString(36).slice(2, 6).toUpperCase()
-                    navigate('/result', { state: { refId: ref } })
+                    // save booking
+                    axios.post('http://localhost:8000/api/bookings', {
+                      experienceId,
+                      title,
+                      date,
+                      time,
+                      qty,
+                      subtotal,
+                      taxes,
+                      discount,
+                      total: Math.max(total - discount, 0),
+                      customerName: fullName,
+                      email,
+                      promoCode: promo,
+                      refId: ref,
+                    }).finally(() => {
+                      navigate('/result', { state: { refId: ref } })
+                    })
                   }}
                   className={`w-full rounded-md px-4 py-2 text-sm font-medium ${isValid ? 'bg-yellow-400 hover:bg-yellow-300 text-gray-900' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
                 >
