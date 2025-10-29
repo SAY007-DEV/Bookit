@@ -4,6 +4,7 @@ import './App.css'
 import Header from './Components/Header'
 import Home from './Components/Pages/Home'
 import Deatails from './Components/Pages/Deatails'
+import Checkout from './Components/Pages/Checkout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
        <Routes>
          <Route path="/" element={<Home/>} />
          <Route path="/details/:id" element={<Deatails/>} />
+         <Route path="/checkout" element={<Checkout/>} />
        </Routes>
      </BrowserRouter>
     </>

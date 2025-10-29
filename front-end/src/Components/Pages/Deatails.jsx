@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function currency(amount) {
@@ -13,6 +13,7 @@ function currency(amount) {
 
 function Deatails() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -161,6 +162,21 @@ function Deatails() {
               <div className="p-4">
                 <button
                   disabled={!selectedSlot}
+                  onClick={() => {
+                    if (!selectedSlot) return
+                    navigate('/checkout', {
+                      state: {
+                        experienceId: id,
+                        title: data.title,
+                        date: selectedDate,
+                        time: selectedSlot.label,
+                        qty,
+                        subtotal,
+                        taxes,
+                        total,
+                      },
+                    })
+                  }}
                   className={`w-full rounded-md px-4 py-2 text-sm font-medium ${selectedSlot ? 'bg-yellow-400 text-gray-900 hover:bg-yellow-300' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
                 >
                   Confirm
