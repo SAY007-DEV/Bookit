@@ -83,7 +83,15 @@ function Checkout() {
                 <span className="text-gray-900">{currency(total)}</span>
               </div>
               <div className="p-4">
-                <button className="w-full rounded-md bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-4 py-2 text-sm font-medium">
+                <button
+                  onClick={() => {
+                    // Generate a short, user-friendly reference id
+                    const ref = Math.random().toString(36).slice(2, 6).toUpperCase() +
+                      Math.random().toString(36).slice(2, 6).toUpperCase()
+                    navigate('/result', { state: { refId: ref } })
+                  }}
+                  className="w-full rounded-md bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-4 py-2 text-sm font-medium"
+                >
                   Pay and Confirm
                 </button>
               </div>
