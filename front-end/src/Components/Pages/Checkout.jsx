@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -21,12 +21,12 @@ function Checkout() {
 
   const { title, date, time, qty, subtotal, taxes, total, experienceId } = state
 
-  const [fullName, setFullName] = React.useState('John Doe')
-  const [email, setEmail] = React.useState('test@test.com')
-  const [agree, setAgree] = React.useState(true)
-  const [promo, setPromo] = React.useState('')
-  const [discount, setDiscount] = React.useState(0)
-  const [applying, setApplying] = React.useState(false)
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [agree, setAgree] = useState(true)
+  const [promo, setPromo] = useState('')
+  const [discount, setDiscount] = useState(0)
+  const [applying, setApplying] = useState(false)
 
   const isEmailValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
   const isValid = fullName.trim().length > 0 && isEmailValid(email) && agree
@@ -45,6 +45,7 @@ function Checkout() {
                   <input
                     required
                     value={fullName}
+                    placeholder='John Doe'
                     onChange={(e) => setFullName(e.target.value)}
                     className="w-full rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm"
                   />
@@ -54,7 +55,8 @@ function Checkout() {
                   <input
                     type="email"
                     required
-                    value={email}
+                    value={email} 
+                    placeholder='example@example.com'
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm"
                   />
