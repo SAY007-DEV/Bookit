@@ -1,6 +1,7 @@
 import React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 
 function formatCurrencyINR(amount) {
@@ -15,6 +16,9 @@ function Home() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { search } = useLocation()
+  const params = new URLSearchParams(search)
+  const query = (params.get('q') || '').trim().toLowerCase()
 
   useEffect(() => {
     let isMounted = true
@@ -37,6 +41,11 @@ function Home() {
     }
   }, [])
 
+  const filtered = useMemo(() => {
+    if (!query) return items
+    return items.filter((e) => (e.title || '').toLowerCase().includes(query))
+  }, [items, query])
+
   return (
     <main className="w-full bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
@@ -49,7 +58,7 @@ function Home() {
 
         {!loading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {items.map((exp) => (
+            {filtered.map((exp) => (
               <article key={exp.id} className="rounded-lg border border-gray-200 overflow-hidden bg-white shadow-sm">
                 <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
                   <img
@@ -88,6 +97,9 @@ function Home() {
               </article>
             ))}
           </div>
+        )}
+        {!loading && !error && filtered.length === 0 && (
+          <div className="text-center text-sm text-gray-600">No experiences found for "{query}"</div>
         )}
       </div>
     </main>
