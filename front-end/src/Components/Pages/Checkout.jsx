@@ -20,6 +20,14 @@ function Checkout() {
 
   const { title, date, time, qty, subtotal, taxes, total } = state
 
+  const [fullName, setFullName] = React.useState('John Doe')
+  const [email, setEmail] = React.useState('test@test.com')
+  const [agree, setAgree] = React.useState(true)
+  const [promo, setPromo] = React.useState('')
+
+  const isEmailValid = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  const isValid = fullName.trim().length > 0 && isEmailValid(email) && agree
+
   return (
     <main className="w-full bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
@@ -31,21 +39,32 @@ function Checkout() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs text-gray-600 mb-1">Full name</label>
-                  <input className="w-full rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm" defaultValue="John Doe" />
+                  <input
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm"
+                  />
                 </div>
                 <div>
                   <label className="block text-xs text-gray-600 mb-1">Email</label>
-                  <input className="w-full rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm" defaultValue="test@test.com" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm"
+                  />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-xs text-gray-600 mb-1">Promo code</label>
                   <div className="flex gap-3">
-                    <input className="flex-1 rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm" />
+                    <input value={promo} onChange={(e) => setPromo(e.target.value)} className="flex-1 rounded-md border border-gray-200 bg-gray-200 px-3 py-2 text-sm" />
                     <button className="rounded-md bg-gray-800 text-white px-4 py-2 text-sm">Apply</button>
                   </div>
                 </div>
                 <label className="flex items-center gap-2 text-xs text-gray-700 md:col-span-2">
-                  <input type="checkbox" defaultChecked className="h-3 w-3" />
+                  <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="h-3 w-3" />
                   I agree to the terms and safety policy
                 </label>
               </div>
@@ -84,13 +103,15 @@ function Checkout() {
               </div>
               <div className="p-4">
                 <button
+                  disabled={!isValid}
                   onClick={() => {
+                    if (!isValid) return
                     // Generate a short, user-friendly reference id
                     const ref = Math.random().toString(36).slice(2, 6).toUpperCase() +
                       Math.random().toString(36).slice(2, 6).toUpperCase()
                     navigate('/result', { state: { refId: ref } })
                   }}
-                  className="w-full rounded-md bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-4 py-2 text-sm font-medium"
+                  className={`w-full rounded-md px-4 py-2 text-sm font-medium ${isValid ? 'bg-yellow-400 hover:bg-yellow-300 text-gray-900' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
                 >
                   Pay and Confirm
                 </button>

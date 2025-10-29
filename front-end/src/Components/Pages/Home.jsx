@@ -43,7 +43,12 @@ function Home() {
 
   const filtered = useMemo(() => {
     if (!query) return items
-    return items.filter((e) => (e.title || '').toLowerCase().includes(query))
+    return items.filter((e) => {
+      const title = (e.title || '').toLowerCase()
+      const placeA = (e.locationTag || '').toLowerCase()
+      const placeB = (e.cityTag || '').toLowerCase()
+      return title.includes(query) || placeA.includes(query) || placeB.includes(query)
+    })
   }, [items, query])
 
   return (
