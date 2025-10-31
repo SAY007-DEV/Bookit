@@ -5,7 +5,7 @@
 **Objective:**  
 Build a full-featured web application where users explore curated travel experiences, select available slots, and make bookings. This project tests your end-to-end abilities in frontend (React/javaScript/Tailwind) and backend (Node.js/Express/MongoDB ), with special attention to API integration, clean UI, and real-world workflow.
 
-**[Figma Link Here – Add Before Submission]**
+
 
 ---
 
@@ -38,10 +38,7 @@ Build a full-featured web application where users explore curated travel experie
   - `GET /api/experiences/:id` — View specific experience and its slot availability
   - `POST /api/bookings` — Store new bookings
   - `POST /api/promo/validate` — Validate promo codes (e.g. `SAVE10`, `FLAT100`)
-- **Requirements:**
-  - Persist all data in the database
-  - Validate all required inputs
-  - Prevent double booking for the same slot
+
 
 ---
 
@@ -108,3 +105,4 @@ Build a full-featured web application where users explore curated travel experie
 **Note:** See controller files for request/response body examples.
 
 ---
+
