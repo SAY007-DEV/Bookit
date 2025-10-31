@@ -7,6 +7,7 @@ import Deatails from './Components/Pages/Deatails'
 import Checkout from './Components/Pages/Checkout'
 import Result from './Components/Pages/Result'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Footer from './Components/Footer'
 
 function App() {
   
@@ -21,6 +22,7 @@ function App() {
          <Route path="/checkout" element={<Checkout/>} />
          <Route path="/result" element={<Result/>} />
        </Routes>
+         <Footer/>
      </BrowserRouter>
     </>
   )
