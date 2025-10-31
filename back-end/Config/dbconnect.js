@@ -1,10 +1,16 @@
 import mongoose from 'mongoose'
 
-export async function connectDB(uri) {
-  if (mongoose.connection.readyState === 1) return mongoose.connection
-  mongoose.set('strictQuery', true)
-  await mongoose.connect(uri, { dbName: process.env.MONGO_DB || 'bookit' })
-  return mongoose.connection
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    console.log(`MongoDB Connected:`)
+  } catch (error) {
+    console.error(`Error: ${error.message}`)
+    process.exit(1)
+  }
 }
 
-
+export default connectDB
