@@ -7,6 +7,7 @@ import promoRoutes from './Routes/promoRoutes.js'
 
 
 import { notFound, errorHandler } from './Middleware/errorhandle.js'
+import connectDB from './Config/dbconnect.js'
 
 dotenv.config();
 const port=8000
@@ -28,3 +29,5 @@ app.use(errorHandler)
 app.listen(port,()=>{
   console.log('server is running')
 })
+
+connectDB()

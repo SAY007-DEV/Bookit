@@ -1,148 +1,110 @@
-# Experiences Booking Platform
+# BookIt: Experiences & Slots
 
-A full-stack project for managing and booking curated experiences such as kayaking, forest walks, and more.
+## Task Summary: Fullstack Intern Assignment
 
-## Table of Contents
+**Objective:**  
+Build a full-featured web application where users explore curated travel experiences, select available slots, and make bookings. This project tests your end-to-end abilities in frontend (React/javaScript/Tailwind) and backend (Node.js/Express/MongoDB ), with special attention to API integration, clean UI, and real-world workflow.
 
-- [Project Structure](#project-structure)
-- [Requirements](#requirements)
-- [Environment Variables](#environment-variables)
-- [Setup Instructions](#setup-instructions)
-- [Available Scripts](#available-scripts)
-- [API Endpoints](#api-endpoints)
-- [Development Notes](#development-notes)
-- [Troubleshooting](#troubleshooting)
+**[Figma Link Here – Add Before Submission]**
 
 ---
 
-## Project Structure
+## Features & Requirements
 
-```
-root/
-│
-├── back-end/
-│   ├── Config/
-│   │   └── dbconnect.js
-│   ├── Controller/
-│   │   ├── bookingcontroller.js
-│   │   ├── experiencecontroller.js
-│   │   └── promocontoller.js
-│   ├── Middleware/
-│   │   └── errorhandle.js
-│   ├── Model/
-│   │   ├── booking.js
-│   │   └── promo.js
-│   ├── Routes/
-│   │   ├── bookingRoutes.js
-│   │   ├── experienceRoutes.js
-│   │   └── promoRoutes.js
-│   ├── Server.js
-│   ├── package.json
-│   
-├── front-end/ (if exists)
-```
+### Frontend
 
----
+- **Framework:** React + javaScript 
+- **Styling:** TailwindCSS 
+- **Key Pages:**
+  - **Home:** Fetches and lists experiences from the backend
+  - **Details:** Shows experience details including slot calendar & availability
+  - **Checkout:** Collects user information, promo codes, and displays order summary
+  - **Result:** Provides booking confirmation or failure messages
+- **UX/UI:**
+  - Fully responsive and mobile-friendly
+  - Matches Figma design exactly: precise spacing, scale, colors, and states
+  - Smooth feedback for loading, errors, success, and sold-out slots
+- **Logic/Integration:**
+  - Consume backend REST APIs using Axios or Fetch
+  - Use clean state management with React hooks
+  - Minimal form validation (e.g. email, name)
 
-## Requirements
+### Backend
 
-- Node.js v18+
-- npm v9+
-- MongoDB (local or cloud, if you want persistence)
-- [Optional] Postman or similar for API testing
+- **Framework:** Node.js + Express 
+- **Database:** MongoDB
+- **API Endpoints:**
+  - `GET /api/experiences` — List all experiences
+  - `GET /api/experiences/:id` — View specific experience and its slot availability
+  - `POST /api/bookings` — Store new bookings
+  - `POST /api/promo/validate` — Validate promo codes (e.g. `SAVE10`, `FLAT100`)
+- **Requirements:**
+  - Persist all data in the database
+  - Validate all required inputs
+  - Prevent double booking for the same slot
 
 ---
 
-## Environment Variables
+## Integration Flow
 
-Create a `.env` file in `back-end/`:
-
-```
-MONGO_URL=mongodb://127.0.0.1:27017
-PORT=8000
-```
-
-- Change `MONGO_URL` to your MongoDB URI if using a cloud provider.
+1. **User Journey:** Home → Details → Checkout → Result
+2. **Dynamic Data:** Experiences, slots, and confirmations are database-driven and always up-to-date
+3. **API Communication:** Frontend interacts only with documented backend endpoints
 
 ---
 
 ## Setup Instructions
 
-1. **Clone the repo and install dependencies:**
+1. **Install dependencies:**  
+   From the root, run separate installs for backend and frontend:
+   ```sh
+   cd back-end && npm install
+   cd ../front-end && npm install
+   ```
+   
+2. **Configure environment:**  
+   - Create `.env` in `back-end/` with your database URI and server port.
+   - Example:
+     ```
+     MONGO_URL=mongodb://127.0.0.1:27017
+     PORT=8000
+     ```
+
+3. **Start backend:**  
+   Ensure MongoDB (or your chosen DB) is running.
    ```sh
    cd back-end
-   npm install
-   ```
-
-2. **Setup your .env as described above.**
-
-3. **Start MongoDB**  
-   (Make sure your Mongo server is running locally or use your cloud connection string.)
-
-4. **Start the backend server:**
-   ```sh
    npm run dev
    ```
-   You should see `MongoDB Connected:` and `server is running`.
 
----
-
-## Available Scripts
-
-Inside `back-end/`:
-
-- `npm run dev` - Start backend with auto-reload via `nodemon`
-- `npm start` - (If configured) Start backend
-
----
-
-## API Endpoints
-
-### Experience
-
-- `GET /api/experiences`  
-  Returns all available experiences.
-
-- `GET /api/experiences/:id`  
-  Returns detail about one experience, including slots by date.
-
-### Booking
-
-- `POST /api/bookings`  
-  Creates a new booking. See backend controller for required payload.
-
-### Promo
-
-- `POST /api/promo/validate`  
-  Validate a promo code. Payload: `{ "subtotal": number, "code": "PROMO" }`
+4. **Start frontend:**  
+   ```sh
+   cd ../front-end
+   npm run dev
+   ```
+5. **Access the app:**  
+   Open `http://localhost:<PORT>` (see frontend config) in your browser.
 
 ---
 
 ## Development Notes
 
-- Experiences data is currently simulated in-memory in `experiencecontroller.js`.
-- MongoDB is connected for booking persistence.
-- Error handling middleware is set up.
-- CORS & JSON body parsing are enabled.
+- Experience data is dynamic and stored in the database.
+- All bookings persist; slot conflicts are prevented by backend logic.
+- Error handling and validation middleware are enabled on backend.
+- CORS and JSON parsing are pre-configured.
 
 ---
 
-## Troubleshooting
+## API Endpoint Reference
 
-- **Frontend gets `net::ERR_CONNECTION_REFUSED` or `Failed to load experiences`:**
-  - Make sure backend is running: `npm run dev`
-  - Open `http://localhost:8000/api/experiences` in your browser; if you don’t get JSON, check backend logs for errors.
-  - Check your `.env` matches the variable name used in `Server.js` and in your database connect code.
-  - Ensure MongoDB is running and accessible.
+| Method | Endpoint               | Description                                    |
+| ------ | ---------------------- | ---------------------------------------------- |
+| GET    | /api/experiences       | Returns all available experiences              |
+| GET    | /api/experiences/:id   | Returns details & slot calendar for one        |
+| POST   | /api/bookings          | Creates a new booking                          |
+| POST   | /api/promo/validate    | Validates supplied promo code                  |
 
-- **Port Already in Use:**
-  - Change the `PORT` number in `.env` and update your frontend accordingly.
-
-- **Environment variables not loaded:**
-  - Ensure you run `npm run dev` from inside the `back-end` folder.
+**Note:** See controller files for request/response body examples.
 
 ---
-
-## Contact
-
-For help or collaboration, open an issue or contact the repository maintainer.

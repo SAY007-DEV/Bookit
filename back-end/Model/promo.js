@@ -1,6 +1,6 @@
 export const VALID_PROMOS = {
-  SAVE10: { type: 'percent', value: 10 }, // 10% off
-  FLAT100: { type: 'flat', value: 100 }, // ₹100 off
+  SAVE10: { type: 'percent', value: 10 }, 
+  FLAT100: { type: 'flat', value: 100 }, 
 }
 
 export function calculateDiscount(subtotal, code) {
