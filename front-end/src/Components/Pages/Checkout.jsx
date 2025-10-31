@@ -70,7 +70,7 @@ function Checkout() {
                       onClick={async () => {
                         setApplying(true)
                         try {
-                          const res = await axios.post('http://localhost:8000/api/promo/validate', { subtotal, code: promo })
+                          const res = await axios.post('https://bookit-b53v.onrender.com/api/promo/validate', { subtotal, code: promo })
                           setDiscount(res.data?.data?.discount || 0)
                         } finally {
                           setApplying(false)
@@ -136,7 +136,7 @@ function Checkout() {
                     const ref = Math.random().toString(36).slice(2, 6).toUpperCase() +
                       Math.random().toString(36).slice(2, 6).toUpperCase()
                     // save booking
-                    axios.post('http://localhost:8000/api/bookings', {
+                    axios.post('https://bookit-b53v.onrender.com/api/bookings', {
                       experienceId,
                       title,
                       date,

@@ -25,7 +25,7 @@ function Home() {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const res = await axios.get('http://localhost:8000/api/experiences')
+        const res = await axios.get('https://bookit-b53v.onrender.com/api/experiences')
         if (!isMounted) return
         setItems(res.data?.data ?? [])
       } catch (err) {

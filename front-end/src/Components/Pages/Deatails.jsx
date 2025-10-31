@@ -26,7 +26,7 @@ function Deatails() {
     const run = async () => {
       try {
         setLoading(true)
-        const res = await axios.get(`http://localhost:8000/api/experiences/${id}`)
+        const res = await axios.get(`https://bookit-b53v.onrender.com/api/experiences/${id}`)
         if (!mounted) return
         const payload = res.data?.data
         setData(payload)
